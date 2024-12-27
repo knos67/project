@@ -1,0 +1,24 @@
+---
+- name: set time
+  hosts: CentOS:Ubuntu
+  become: yes
+
+  tasks:
+  - name: set timezone to Asia/Seoul
+    timezone:
+      name: Asia/Seoul
+  - name: confirm
+    shell: "date"
+    register: c_time
+
+  - name: echo result
+    debug:
+      var: c_time.stdout
+
+- name: Change Time Zone in Windows
+  hosts: Windows
+
+  tasks:
+  - name: Set to Korea Time Zone
+    win_shell: |
+      tzutil /s "Korea Standard Time"
