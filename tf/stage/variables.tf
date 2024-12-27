@@ -19,10 +19,9 @@ variable "vpc" {
         name            = string
         cidr_block      = string
         tenancy         = string
-        enable-dns-name = bool
+        enable_dns_name = bool
         tags            = object({
-            Name    = string
-            Service = string
+            Name = string
         })
     })
 }
@@ -30,13 +29,14 @@ variable "vpc" {
 ### 2.2 Subnets
 variable "subnets" {
   type = map(object({
-    name              = string
+    # name              = string
     cidr_block        = string
     availability_zone = string
     map_public_ip     = bool
+    type              = string
     tags              = object({
-      Name    = string
-      Service = string
+      Name = string
+      Type = string
     })
   }))
 }
@@ -47,76 +47,63 @@ variable "igw" {
    type    = object({
         name = string
         tags = object({
-            Name    = string
-            Service = string
+            Name = string
         })
     })
 }
 
 ### 2.4 NGW
 variable "natgw" {
-# subnet_id     = aws_subnet.public_subnet1.id # 퍼블릿 서브넷으로 가야한다.
-# allocation_id = aws_eip.natgw-eip.id # 생성한 EIP를 할당한다.
-  type          = object({
+        type = object({
         name = string
         tags = object({
-            Name    = string
-            Service = string
+            Name = string
         })
     })
 }
 
 ### 2.5 RTB Public
-variable "rtb-pub" {
-    type = map(object({
-        #name    = string
-        #vpc_id = aws_vpc.vpc.id
+variable "rtb_pub" {
+    type = object({
         route   = object({
-            cidr_block  = string
-            #gateway_id = string # IGW reference
+            cidr_block = string
         })
         tags = object({
-            Name    = string
-            Service = string
+            Name = string
         })
-    }))
+    })
 }
 
 ### 2.6 RTB Private
-variable "rtb-priv" {
-    type = map(object({
-        #name    = string
-        #vpc_id = aws_vpc.vpc.id
+variable "rtb_priv" {
+    type = object({
         route   = object({
-            cidr_block  = string
-            #gateway_id = string # IGW reference
+            cidr_block = string
         })
         tags = object({
-            Name    = string
-            Service = string
+            Name = string
         })
-    }))
+    })
 }
 
 ### 2.7 RTB Assoication (with Subnets) - public
-variable "rtb-assoc-pub" {
-    type = string
-}
+# variable "rtb-assoc-pub" {
+# type = string
+# }
 
-### 2.8 RTB Assoication (with Subnets) - private
-variable "rtb-assoc-priv" {
-    type = string
-
-}### 2.9.1 VPC Endpoints(VPCE) - Gateway
+# ### 2.8 RTB Assoication (with Subnets) - private
+# variable "rtb-assoc-priv" {
+# type = string
+# }
+### 2.9.1 VPC Endpoints(VPCE) - Gateway
 
 variable "vpce-gw" {
     type = map(object({
-        name         = string
+          name         = string
         # vpc_id       = string
         # service_name = string
-        tags         = object({
-            Name    = string
-            Service = string
+          tags         = object({
+            Name = string
         })
     }))
   #vpc_id       = aws_vpc.main.id
@@ -126,14 +113,13 @@ variable "vpce-gw" {
 ### 2.9.2 VPC Endpoints(VPCE) - Interface
 variable "vpce-if" {
     type = map(object({
-        name         = string
-        vpc_endpoint_type = "Interface"
-        # vpc_id       = string
-        # service_name = string
-        private_dns_enabled = true
-        tags         = object({
-            Name    = string
-            Service = string
+          name                = string
+          vpc_endpoint_type   = string
+        # vpc_id              = string
+        # service_name        = string
+          private_dns_enabled = bool
+          tags                = object({
+            Name = string
         })
     }))
   #vpc_id       = aws_vpc.main.id
@@ -144,9 +130,8 @@ variable "vpce-if" {
 variable "eips" {
     type = map(object({
         # name = string
-        tags = object({
-            Name    = string
-            Service = string
+          tags = object({
+            Name = string
         })
     }))
 }
