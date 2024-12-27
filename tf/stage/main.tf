@@ -8,24 +8,24 @@ terraform {
 }
 
 provider "aws" {
-  # Configuration options
+  # Configuration options / Singapore
   region = "ap-southeast-1"
 }
 
 # [공통]
-# service_type: prod | test
+# env: prod | stage
 # vpc_id, subnet_ids 는 더 이상 사용자 입력 변수가 아니다
 # vpc 모듈에서 나오는 값을 사용
 
 #모듈 선언
 
-# ALB
+# cicd
 module "cicd" {
     # 모듈 경로
-    source = "./alb"
+    source = "./cicd"
 
     # 네트워크 공통
-    service_type = var.service_type
+    env = var.env
 
     # Output Forwarding (by Parent Module)
     vpc_id = module.vpc.vpc_id
@@ -44,10 +44,10 @@ module "cicd" {
 
 module "community" {
     # 모듈 경로
-    source = "./ec2"
+    source = "./community"
 
     # 네트워크 공통
-    service_type = var.service_type
+    env = var.env
 
     # Output Forwarding (by Parent Module)
     vpc_id = module.vpc.vpc_id
@@ -65,10 +65,10 @@ module "community" {
 
 module "data" {
     # 모듈 경로
-    source = "./ec2-bastion"
+    source = "./data"
 
     # 네트워크 공통
-    service_type = var.service_type
+    env = var.env
 
     # Output Forwarding (by Parent Module)
     vpc_id = module.vpc.vpc_id
@@ -83,12 +83,13 @@ module "data" {
     # 기타 aws_instance 관련 파라미터들 여기에 기입
 }
 
+
 module "monitoring" {
     # 모듈 경로
-    source = "./rds"
+    source = "./monitoring"
 
     # 네트워크 공통
-    service_type = var.service_type
+    env = var.env
     vpc_id       = module.vpc.vpc_id
 
     # 모듈 파라미터
@@ -102,12 +103,20 @@ module "monitoring" {
     private_subnet2_id = module.vpc.private_subnet2_id
 }
 
+module "network" {
+    # 모듈 경로
+    source = "./network"
+
+    # 모듈 파라미터
+    env = var.env
+}
+
 module "noti" {
     # 모듈 경로
-    source = "./s3"
+    source = "./noti"
 
     # 네트워크 공통
-    service_type = var.service_type
+    env = var.env
 
     # Output Forwarding (by Parent Module)
     vpc_id = module.vpc.vpc_id
@@ -115,21 +124,14 @@ module "noti" {
     # 모듈 파라미터
 
     # 변수와 문자열 결합에서는 ${VARNAME} 사용
-    bucket = "saju-front-${var.service_type}-08"
+    bucket = "saju-front-${var.env}-08"
 }
 
-module "network" {
-    # 모듈 경로
-    source = "./vpc"
-
-    # 모듈 파라미터
-    service_type = var.service_type
-}
 
 module "misc" {
     # 모듈 경로
-    source = "./vpc"
+    source = "./misc"
 
     # 모듈 파라미터
-    service_type = var.service_type
+    env = var.env
 }
