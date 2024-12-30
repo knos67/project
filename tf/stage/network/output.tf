@@ -3,9 +3,9 @@ output "out_vpc_id" {
 }
 
 output "out_subnet_ids" {
-    value = aws_subnet.subnets
+    value = { for key, value in aws_subnet.subnets : key => value.id }
 }
 
 output "out_eips" {
-    value = aws_eip.eips
+    value = { for key, value in aws_eip.eips : key => value.public_ip }
 }
