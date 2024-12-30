@@ -1,9 +1,3 @@
-# 1. 환경변수
-env = {
-    name = "stage"
-    region = "ap-southeast-1"
-    pf = "io-stage"
-}
 
 ## 2. 네트워크 변수
 

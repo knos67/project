@@ -1,15 +1,6 @@
 # 여기서 선언한 변수는 var.VARNAME으로 사용 가능하다.
 # 실제 값을 넣지는 않고 선언만 해준다.
 
-## 1. 환경변수
-variable "env" {
-    type = object({
-        name   = string
-        region = string
-        pf     = string
-        })
-}
-
 
 ## 2. 네트워크 변수
 

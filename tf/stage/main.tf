@@ -128,21 +128,30 @@ module "network" {
 
 }
 
-# module "noti" {
-#     # 모듈 경로
-#     source = "./noti"
+module "noti" {
+    # 모듈 경로
+    source = "./noti"
 
-#     # 네트워크 공통
-#     env = var.env
+    # 공통
+    env = var.env
 
-#     # Output Forwarding (by Parent Module)
-#     vpc_id = module.vpc.vpc_id
+    # 변수
+    cred = var.cred
+    sqs = var.sqs
+    sns = var.sns
+    iam_role = var.iam_role
+    iam_policy = var.iam_policy
+    lambda = var.lambda
 
-#     # 모듈 파라미터
+    userdata_path = "${path.root}/userdata/noti/"
+    # Output Forwarding (by Parent Module)
+    # vpc_id = module.vpc.vpc_id
 
-#     # 변수와 문자열 결합에서는 ${VARNAME} 사용
-#     bucket = "saju-front-${var.env}-08"
-# }
+    # 모듈 파라미터
+
+    # 변수와 문자열 결합에서는 ${VARNAME} 사용
+    # bucket = "saju-front-${var.env}-08"
+}
 
 
 # module "misc" {
